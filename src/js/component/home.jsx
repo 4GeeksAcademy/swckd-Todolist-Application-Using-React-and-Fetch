@@ -9,17 +9,19 @@ const Home = () => {
 
 	const handleInputValue = (event) => {
 		setInputValue(event.target.value);
-		// console.log(inputValue);
 	}
 
 	const handleSubmit = (event) => {
 		if (event.key === "Enter") {
 			postTodo(inputValue);
-			// console.log(inputValue);
 			setInputValue("");
 		}
 	}
 
+	const handleOnClick = (todo) => {
+		deleteTodo(todo);
+
+	}
 
 	const postTodo = async (tarea) => {
 		try {
@@ -40,25 +42,44 @@ const Home = () => {
 
 			const response = await fetch("https://playground.4geeks.com/todo/todos/alejandro", requestOptions)
 			const result = await response.text();
-
+			console.log(result);
 		} catch (error) {
 			console.log(error);
 		}
 	}
 
-	useEffect(() => {
+	const deleteTodo = async (todo) => {
+		try {
+			const requestOptions = {
+				method: "DELETE",
+				redirect: "follow"
+			};
+			const response = await fetch(`https://playground.4geeks.com/todo/todos/${todo}`, requestOptions)
+			const result = await response.text();
+			fetchTodos();
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	const fetchTodos = () => {
 		const fetchData = async () => {
 			try {
 				const response = await fetch("https://playground.4geeks.com/todo/users/alejandro");
 				const data = await response.json();
 				setTodos(data.todos);
-		
+
 			} catch (error) {
 				console.log(error);
 			}
-		};
-		fetchData();
-	}, [todos]);
+
+		}
+		fetchData();;
+	}
+	useEffect(() => {
+
+		fetchTodos();
+	}, [inputValue]);
 
 	return (
 
@@ -77,7 +98,7 @@ const Home = () => {
 
 				{todos && todos.map((item, index) => (
 					<li className="list-group-item text-start" key={index}>
-						<span className="me-2 badge text-bg-secondary">X</span>
+						<span className="me-2 badge text-bg-secondary" onClick={() => { handleOnClick(item.id) }}>X</span>
 						{item.label}
 					</li>
 				))}
