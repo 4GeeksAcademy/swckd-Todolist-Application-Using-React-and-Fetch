@@ -2,26 +2,27 @@ import React, { useState, useEffect } from "react";
 
 const Home = () => {
 
-	// const [todo, setTodo] = useState({});
+	const [todo, setTodo] = useState({});
 	const [todos, setTodos] = useState([]);
 
 	const [inputValue, setInputValue] = useState("");
 
 	const handleInputValue = (event) => {
 		setInputValue(event.target.value);
+		// console.log(inputValue);
 	}
 
-	const handleSubmit = (event, inputValue) => {
+	const handleSubmit = (event) => {
 		if (event.key === "Enter") {
-			// setTodoList(todoList.concat(inputValue));
 			postTodo(inputValue);
+			// console.log(inputValue);
 			setInputValue("");
 		}
 	}
 
+
 	const postTodo = async (tarea) => {
 		try {
-
 			const myHeaders = new Headers();
 			myHeaders.append("Content-Type", "application/json");
 
@@ -50,18 +51,18 @@ const Home = () => {
 			try {
 				const response = await fetch("https://playground.4geeks.com/todo/users/alejandro");
 				const data = await response.json();
-
 				setTodos(data.todos);
+		
 			} catch (error) {
 				console.log(error);
 			}
 		};
 		fetchData();
-	}, []);
+	}, [todos]);
 
 	return (
 
-		< div className="d-flex flex-column justify-content-center align-items-center text-center w-50 m-auto" >
+		<div className="d-flex flex-column justify-content-center align-items-center text-center w-50 m-auto" >
 
 			<h1 className="text-center mt-5">lista de tareas</h1>
 			<ul className="list-group list-group-flush">
